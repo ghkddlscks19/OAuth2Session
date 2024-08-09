@@ -12,6 +12,15 @@ spring:
             scope:
               - name
               - email
+          google:
+            client-name: google
+            client-id: 621000518950-uaqhm4n9gqnjkc2nl3ua98havs6br366.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            authorization-grant-type: authorization_code
+            scope:
+              - profile
+              - email
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize
