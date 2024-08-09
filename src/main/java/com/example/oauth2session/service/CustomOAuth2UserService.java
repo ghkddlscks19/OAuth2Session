@@ -1,5 +1,6 @@
 package com.example.oauth2session.service;
 
+import com.example.oauth2session.dto.CustomOAuth2User;
 import com.example.oauth2session.dto.GoogleResponse;
 import com.example.oauth2session.dto.NaverResponse;
 import com.example.oauth2session.dto.OAuth2Response;
@@ -21,7 +22,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         System.out.println(oAuth2User.getAttributes());
 
         //registrationId를 통해 구글, 네이버 등 판별
-        String registrationId = userRequest.getClientRegistration().getClientId();
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
         if (registrationId.equals("naver")) {
             oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
@@ -32,5 +33,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
         //나머지 구현
+
+        String role = "ROLE_USER";
+        return new CustomOAuth2User(oAuth2Response, role);
     }
 }
