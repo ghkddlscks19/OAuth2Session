@@ -4,6 +4,8 @@ import com.example.oauth2session.dto.CustomOAuth2User;
 import com.example.oauth2session.dto.GoogleResponse;
 import com.example.oauth2session.dto.NaverResponse;
 import com.example.oauth2session.dto.OAuth2Response;
+import com.example.oauth2session.entity.User;
+import com.example.oauth2session.repository.UserRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -13,6 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     //DefaultOAuth2UserService OAuth2UserService의 구현체
+
+    private final UserRepository userRepository;
+
+    public CustomOAuth2UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -32,9 +40,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return null;
         }
 
-        //나머지 구현
+        String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
+        User findUser = userRepository.findByUsername(username);
+        String role = null;
+        if (findUser == null) {
+            User user = new User();
+            user.setUsername(username);
+            user.setEmail(oAuth2Response.getEmail());
+            user.setRole("ROLE_USER");
+            userRepository.save(user);
+        } else {
+            role = findUser.getRole();
+            findUser.setEmail(oAuth2Response.getEmail());
+        }
 
-        String role = "ROLE_USER";
         return new CustomOAuth2User(oAuth2Response, role);
     }
 }
