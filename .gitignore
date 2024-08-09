@@ -27,7 +27,7 @@ out/
 !**/src/test/**/out/
 src/main/resources/application-oauth.yml
 src/main/resources/application-db.yml
-
+src/main/java/com/example/oauth2session/oauth2/SocialClientRegistration.java
 
 ### NetBeans ###
 /nbproject/private/
